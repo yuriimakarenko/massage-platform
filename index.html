@@ -3,222 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up</title>
+  <title>Massage Registration</title>
   <style>
     body {
       margin: 0;
-      padding: 50px 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2c3e50, #8e44ad);
+      background: linear-gradient(#8360c3, #2ebf91);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
+      align-items: center;
+      height: 100vh;
     }
-    .form-box {
-      background-color: #1f1f1f;
-      padding: 30px;
+    form {
+      background: #111;
+      color: #fff;
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-      width: 100%;
-      max-width: 400px;
-      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      width: 300px;
     }
-    h2 {
-      text-align: center;
-      color: white;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      color: #ccc;
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-    input, textarea, select {
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
-      margin-bottom: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
       border: none;
-      border-radius: 8px;
-      background-color: #333;
-      color: white;
-    }
-    input::placeholder, textarea::placeholder {
-      color: #aaa;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      background: #28a745;
+      color: #fff;
+      font-weight: bold;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #218838;
-    }
-    .autocomplete-suggestions {
+    #suggestionsBox {
       position: absolute;
       background: white;
-      color: black;
       border: 1px solid #ccc;
-      width: 100%;
       max-height: 150px;
       overflow-y: auto;
-      border-radius: 6px;
-      z-index: 999;
-    }
-    .autocomplete-suggestions:empty {
+      width: 280px;
       display: none;
+      z-index: 1000;
     }
-    .autocomplete-suggestions div {
+    #suggestionsBox div {
       padding: 10px;
       cursor: pointer;
     }
-    .autocomplete-suggestions div:hover {
+    #suggestionsBox div:hover {
       background: #eee;
     }
   </style>
 </head>
 <body>
-
-<div class="form-box">
-  <h2>Sign Up</h2>
   <form id="registrationForm">
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" placeholder="First Name" required>
-
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" placeholder="Last Name" required>
-
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="Username" required>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" placeholder="Email" required>
-
-    <label for="city">City:</label>
-    <input type="text" id="city" placeholder="Start typing your city..." autocomplete="off" required>
-    <div id="suggestions" class="autocomplete-suggestions"></div>
-
-    <label for="phone">Phone Number:</label>
-    <input type="text" id="phone" placeholder="Digits only" required>
-
-    <label for="age">Age (18+):</label>
-    <input type="number" id="age" min="18" placeholder="Age" required>
-
-    <label for="weight">Weight:</label>
-    <input type="number" id="weight" placeholder="Weight">
-    <select><option selected>kg</option></select>
-
-    <label for="height">Height:</label>
-    <input type="number" id="height" placeholder="Height">
-    <select><option selected>cm</option></select>
-
-    <label for="description">Profile Description:</label>
-    <textarea id="description" rows="4" placeholder="Tell us about yourself..."></textarea>
-
+    <input type="text" name="firstName" placeholder="First Name" required />
+    <input type="text" name="lastName" placeholder="Last Name" required />
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" id="cityInput" name="city" placeholder="City" autocomplete="off" required />
+    <div id="suggestionsBox"></div>
+    <input type="text" name="phone" placeholder="Phone Number" required />
+    <input type="number" name="age" placeholder="Age (18+)" required />
+    <input type="number" name="weight" placeholder="Weight (kg)" required />
+    <input type="number" name="height" placeholder="Height (cm)" required />
+    <textarea name="description" placeholder="Profile Description"></textarea>
     <button type="submit">Submit</button>
   </form>
-</div>
 
-<script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
-  const form = document.getElementById("registrationForm");
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
 
-  document.getElementById('phone').addEventListener('input', function () {
-    this.value = this.value.replace(/\D/g, '');
-  });
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    const data = {
-      firstName: document.getElementById("firstName").value,
-      lastName: document.getElementById("lastName").value,
-      username: document.getElementById("username").value,
-      email: email,
-      city: document.getElementById("city").value,
-      phone: document.getElementById("phone").value,
-      age: document.getElementById("age").value,
-      weight: document.getElementById("weight").value,
-      height: document.getElementById("height").value,
-      description: document.getElementById("description").value
-    };
-
-    fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        alert("✅ Registration submitted successfully!");
-        form.reset();
-      } else {
-        throw new Error("Server error");
-      }
-    })
-    .catch(error => {
-      alert("❌ Error sending data.");
-      console.error("Error:", error);
-    });
-  });
-
-  // Автозаполнение городов
-  const cityInput = document.getElementById("city");
-  const suggestionsBox = document.getElementById("suggestions");
-  const geoapifyKey = "39b7caaba14641b6a3a40a63ec090395";
-
-  cityInput.addEventListener("input", async () => {
-    const query = cityInput.value;
-    if (query.length < 3) {
-      suggestionsBox.innerHTML = "";
-      return;
-    }
-
-    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&type=city&limit=5&apiKey=${geoapifyKey}`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-
-      suggestionsBox.innerHTML = "";
-      if (data.features) {
-        data.features.forEach(place => {
-          const div = document.createElement("div");
-          div.textContent = place.properties.city + 
-            (place.properties.state ? ", " + place.properties.state : "") + 
-            ", " + place.properties.country;
-          div.addEventListener("click", () => {
-            cityInput.value = place.properties.city;
-            suggestionsBox.innerHTML = "";
-          });
-          suggestionsBox.appendChild(div);
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.text())
+        .then(response => {
+          alert("Success! Data sent.");
+          this.reset();
+        })
+        .catch(error => {
+          console.error("Error!", error);
+          alert("Error sending data.");
         });
+    });
+
+    // Autocomplete для города через Geoapify
+    const cityInput = document.getElementById("cityInput");
+    const suggestionsBox = document.getElementById("suggestionsBox");
+    const geoapifyKey = "qGgmPYMH7t6b2eOjmsPW"; // твой API ключ
+
+    cityInput.addEventListener("input", () => {
+      const value = cityInput.value.trim();
+      if (value.length < 3) {
+        suggestionsBox.style.display = "none";
+        return;
       }
-    } catch (err) {
-      console.error("Geoapify error:", err);
-    }
-  });
+      fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&type=city&limit=5&apiKey=${geoapifyKey}`)
+        .then(res => res.json())
+        .then(data => {
+          suggestionsBox.innerHTML = "";
+          if (data.features) {
+            data.features.forEach(place => {
+              const div = document.createElement("div");
+              div.textContent = place.properties.city;
+              div.addEventListener("click", () => {
+                cityInput.value = place.properties.city;
+                suggestionsBox.style.display = "none";
+              });
+              suggestionsBox.appendChild(div);
+            });
+            suggestionsBox.style.display = "block";
+          } else {
+            suggestionsBox.style.display = "none";
+          }
+        })
+        .catch(err => console.error("Geoapify error:", err));
+    });
 
-  document.addEventListener("click", (e) => {
-    if (!suggestionsBox.contains(e.target) && e.target !== cityInput) {
-      suggestionsBox.innerHTML = "";
-    }
-  });
-</script>
-
+    document.addEventListener("click", (e) => {
+      if (!suggestionsBox.contains(e.target) && e.target !== cityInput) {
+        suggestionsBox.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>
