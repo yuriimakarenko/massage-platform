@@ -2,139 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Massage Registration</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(#8360c3, #2ebf91);
+      background: linear-gradient(#3e8e9d, #0d2d4c);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
+
     form {
-      background: #111;
-      color: #fff;
+      background-color: #111;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
       width: 300px;
+      color: white;
     }
-    input, textarea, select, button {
+
+    input, textarea {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+      margin-bottom: 10px;
+      padding: 8px;
       border-radius: 5px;
       border: none;
     }
+
     button {
-      background: #28a745;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #suggestionsBox {
-      position: absolute;
-      background: white;
-      border: 1px solid #ccc;
-      max-height: 150px;
-      overflow-y: auto;
-      width: 280px;
-      display: none;
-      z-index: 1000;
-    }
-    #suggestionsBox div {
+      width: 100%;
       padding: 10px;
-      cursor: pointer;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
     }
-    #suggestionsBox div:hover {
-      background: #eee;
+
+    button:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
+
   <form id="registrationForm">
     <input type="text" name="firstName" placeholder="First Name" required />
     <input type="text" name="lastName" placeholder="Last Name" required />
     <input type="text" name="username" placeholder="Username" required />
     <input type="email" name="email" placeholder="Email" required />
-    <input type="text" id="cityInput" name="city" placeholder="City" autocomplete="off" required />
-    <div id="suggestionsBox"></div>
+    <input type="text" name="city" placeholder="City" required />
     <input type="text" name="phone" placeholder="Phone Number" required />
     <input type="number" name="age" placeholder="Age (18+)" required />
-    <input type="number" name="weight" placeholder="Weight (kg)" required />
-    <input type="number" name="height" placeholder="Height (cm)" required />
-    <textarea name="description" placeholder="Profile Description"></textarea>
+    <input type="number" name="weight" placeholder="Weight" required />
+    <input type="number" name="height" placeholder="Height" required />
+    <textarea name="description" placeholder="Profile Description" rows="3"></textarea>
     <button type="submit">Submit</button>
   </form>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
-
-    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+    const form = document.getElementById('registrationForm');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(this);
-      const data = {};
-      formData.forEach((value, key) => data[key] = value);
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.text())
-        .then(response => {
-          alert("Success! Data sent.");
-          this.reset();
-        })
-        .catch(error => {
-          console.error("Error!", error);
-          alert("Error sending data.");
+      const formData = new FormData(form);
+      const jsonData = {};
+
+      formData.forEach((value, key) => {
+        jsonData[key] = value;
+      });
+
+      const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
+
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
         });
-    });
 
-    // Autocomplete для города через Geoapify
-    const cityInput = document.getElementById("cityInput");
-    const suggestionsBox = document.getElementById("suggestionsBox");
-    const geoapifyKey = "qGgmPYMH7t6b2eOjmsPW"; // твой API ключ
-
-    cityInput.addEventListener("input", () => {
-      const value = cityInput.value.trim();
-      if (value.length < 3) {
-        suggestionsBox.style.display = "none";
-        return;
-      }
-      fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&type=city&limit=5&apiKey=${geoapifyKey}`)
-        .then(res => res.json())
-        .then(data => {
-          suggestionsBox.innerHTML = "";
-          if (data.features) {
-            data.features.forEach(place => {
-              const div = document.createElement("div");
-              div.textContent = place.properties.city;
-              div.addEventListener("click", () => {
-                cityInput.value = place.properties.city;
-                suggestionsBox.style.display = "none";
-              });
-              suggestionsBox.appendChild(div);
-            });
-            suggestionsBox.style.display = "block";
-          } else {
-            suggestionsBox.style.display = "none";
-          }
-        })
-        .catch(err => console.error("Geoapify error:", err));
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!suggestionsBox.contains(e.target) && e.target !== cityInput) {
-        suggestionsBox.style.display = "none";
+        alert("Form submitted!");
+        form.reset();
+      } catch (error) {
+        alert("Error sending data.");
+        console.error("Fetch error:", error);
       }
     });
   </script>
+
 </body>
 </html>
