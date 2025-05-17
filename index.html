@@ -2,89 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Massage Registration</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      height: 100vh;
-      background: linear-gradient(to bottom right, #1e3c72, #2a5298);
+      background: linear-gradient(to bottom right, #003973, #E5E5BE);
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
     }
-
-    form {
-      background: #111;
+    .container {
+      background-color: #1e1e1e;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       width: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
     }
-
     input, textarea, select, button {
+      width: 100%;
       padding: 10px;
-      border-radius: 6px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
       border: none;
-      font-size: 14px;
     }
-
     button {
       background-color: #28a745;
       color: white;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
     }
-
     button:hover {
       background-color: #218838;
     }
   </style>
 </head>
 <body>
-  <form id="registrationForm">
-    <input type="text" name="firstName" placeholder="First Name" required />
-    <input type="text" name="lastName" placeholder="Last Name" required />
-    <input type="text" name="username" placeholder="Username" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="text" name="city" placeholder="City" required />
-    <input type="tel" name="phone" placeholder="Phone Number" required />
-    <input type="number" name="age" placeholder="Age (18+)" required min="18" />
-    <input type="number" name="weight" placeholder="Weight (kg)" required />
-    <input type="number" name="height" placeholder="Height (cm)" required />
-    <textarea name="description" placeholder="Profile Description"></textarea>
-    <button type="submit">Submit</button>
-  </form>
+  <div class="container">
+    <form id="registrationForm">
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="text" name="city" placeholder="City" required />
+      <input type="tel" name="phone" placeholder="Phone Number" required />
+      <input type="number" name="age" placeholder="Age (18+)" required min="18" />
+      <input type="number" name="weight" placeholder="Weight (kg)" required />
+      <input type="number" name="height" placeholder="Height (cm)" required />
+      <textarea name="description" placeholder="Profile Description" rows="3"></textarea>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
     const form = document.getElementById("registrationForm");
-
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => (data[key] = value));
+      const object = {};
+      formData.forEach((value, key) => (object[key] = value));
 
       try {
-        const response = await fetch(scriptURL, {
+        await fetch("https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(object),
         });
 
         alert("Thank you for registering!");
-        window.location.href = "profile.html"; // перенаправление на профиль
-
+        localStorage.setItem("userProfile", JSON.stringify(object));
+        window.location.href = "profile.html";
       } catch (error) {
-        alert("Error submitting form.");
-        console.error("Error:", error);
+        alert("Error sending data.");
+        console.error("submission error:", error);
       }
     });
   </script>
