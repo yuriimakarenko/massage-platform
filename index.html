@@ -22,22 +22,21 @@
       width: 100%;
       max-width: 400px;
     }
-    input, select, textarea {
+    input, textarea {
       display: block;
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
+      margin: 10px 0;
       border-radius: 6px;
+      border: 1px solid #ccc;
     }
     button {
+      width: 100%;
+      padding: 12px;
       background: #27ae60;
       color: #fff;
       border: none;
-      padding: 12px;
       border-radius: 6px;
-      width: 100%;
       font-size: 16px;
       cursor: pointer;
     }
@@ -47,14 +46,15 @@
   </style>
 </head>
 <body>
+
   <form id="registrationForm">
     <input name="firstName" type="text" placeholder="First Name" required />
     <input name="lastName" type="text" placeholder="Last Name" required />
     <input name="username" type="text" placeholder="Username" required />
     <input name="email" type="email" placeholder="Email" required />
     <input name="city" type="text" placeholder="City" required />
-    <input name="phone" type="tel" placeholder="Phone Number" required />
-    <input name="age" type="number" placeholder="Age" min="18" required />
+    <input name="phone" type="text" placeholder="Phone" required />
+    <input name="age" type="number" placeholder="Age" required />
     <input name="weight" type="number" placeholder="Weight (kg)" required />
     <input name="height" type="number" placeholder="Height (cm)" required />
     <textarea name="description" placeholder="Profile Description..." rows="4"></textarea>
@@ -72,21 +72,21 @@
       });
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec", {
           method: "POST",
-          body: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          body: JSON.stringify(data)
         });
-
-        const result = await response.text();
-        alert(result);
+        alert("✅ Данные успешно отправлены!");
         form.reset();
       } catch (error) {
-        alert("Error sending data.");
+        alert("❌ Ошибка при отправке данных.");
+        console.error(error);
       }
     });
   </script>
+
 </body>
 </html>
