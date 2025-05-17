@@ -3,62 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Massage Registration</title>
+  <title>Registration</title>
   <style>
     body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #1e3c72, #2a5298);
+      height: 100vh;
+      background: linear-gradient(to bottom right, #1e3c72, #2a5298);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
 
     form {
       background: #111;
-      padding: 20px;
+      padding: 30px;
       border-radius: 12px;
-      width: 300px;
       box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    input, textarea {
-      width: 100%;
+    input, textarea, select, button {
       padding: 10px;
-      margin: 8px 0;
-      border: none;
       border-radius: 6px;
+      border: none;
+      font-size: 14px;
     }
 
     button {
-      width: 100%;
-      background: #00cc66;
+      background-color: #28a745;
       color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
       cursor: pointer;
+      font-weight: bold;
     }
 
     button:hover {
-      background: #00994d;
-    }
-
-    .success-popup {
-      position: fixed;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      color: black;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      text-align: center;
-      z-index: 999;
-      display: none;
+      background-color: #218838;
     }
   </style>
 </head>
@@ -70,51 +54,37 @@
     <input type="email" name="email" placeholder="Email" required />
     <input type="text" name="city" placeholder="City" required />
     <input type="tel" name="phone" placeholder="Phone Number" required />
-    <input type="number" name="age" placeholder="Age (18+)" min="18" required />
+    <input type="number" name="age" placeholder="Age (18+)" required min="18" />
     <input type="number" name="weight" placeholder="Weight (kg)" required />
     <input type="number" name="height" placeholder="Height (cm)" required />
-    <textarea name="description" placeholder="Profile Description" rows="3"></textarea>
+    <textarea name="description" placeholder="Profile Description"></textarea>
     <button type="submit">Submit</button>
   </form>
 
-  <div class="success-popup" id="successPopup">Thank you for registering!</div>
-
   <script>
-    const form = document.getElementById("registrationForm");
-    const successPopup = document.getElementById("successPopup");
     const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
+    const form = document.getElementById("registrationForm");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const formData = new FormData(form);
       const data = {};
-      formData.forEach((value, key) => {
-        data[key] = value;
-        localStorage.setItem(key, value); // save to localStorage
-      });
+      formData.forEach((value, key) => (data[key] = value));
 
       try {
-        await fetch(scriptURL, {
+        const response = await fetch(scriptURL, {
           method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json"
-          }
         });
 
-        // Show success popup
-        successPopup.style.display = "block";
+        alert("Thank you for registering!");
+        window.location.href = "profile.html"; // перенаправление на профиль
 
-        setTimeout(() => {
-          successPopup.style.display = "none";
-          window.location.href = "profile.html"; // redirect after 2 seconds
-        }, 2000);
-
-        form.reset();
       } catch (error) {
-        alert("Error submitting data.");
-        console.error("Submission error:", error);
+        alert("Error submitting form.");
+        console.error("Error:", error);
       }
     });
   </script>
