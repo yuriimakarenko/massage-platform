@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registration</title>
+  <title>Massage Registration</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(#006699, #003366);
+      background: linear-gradient(to bottom, #0d1b2a, #1b263b);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,29 +17,36 @@
 
     form {
       background: #111;
-      padding: 20px;
+      padding: 30px;
       border-radius: 10px;
-      width: 300px;
-      color: white;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
     }
 
-    input, textarea, select {
-      width: 100%;
+    input, textarea {
+      margin-bottom: 12px;
       padding: 10px;
-      margin: 8px 0;
       border: none;
       border-radius: 5px;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
     }
 
     button {
       background-color: #28a745;
       color: white;
-      padding: 10px;
-      width: 100%;
+      padding: 12px;
+      font-size: 16px;
       border: none;
       border-radius: 5px;
-      font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
     }
 
     button:hover {
@@ -48,54 +55,50 @@
   </style>
 </head>
 <body>
+  <form id="registrationForm">
+    <input type="text" name="firstName" placeholder="First Name" required />
+    <input type="text" name="lastName" placeholder="Last Name" required />
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="city" placeholder="City" required />
+    <input type="tel" name="phone" placeholder="Phone Number" required />
+    <input type="number" name="age" placeholder="Age (18+)" required min="18"/>
+    <input type="number" name="weight" placeholder="Weight (kg)" required />
+    <input type="number" name="height" placeholder="Height (cm)" required />
+    <textarea name="description" placeholder="Profile Description" rows="3"></textarea>
+    <button type="submit">Submit</button>
+  </form>
 
-<form id="registrationForm">
-  <input type="text" name="firstName" placeholder="First Name" required />
-  <input type="text" name="lastName" placeholder="Last Name" required />
-  <input type="text" name="username" placeholder="Username" required />
-  <input type="email" name="email" placeholder="Email" required />
-  <input type="text" name="city" placeholder="City" required />
-  <input type="tel" name="phone" placeholder="Phone Number" required />
-  <input type="number" name="age" placeholder="Age (18+)" required min="18"/>
-  <input type="number" name="weight" placeholder="Weight (kg)" required />
-  <input type="number" name="height" placeholder="Height (cm)" required />
-  <textarea name="description" placeholder="Profile Description"></textarea>
-  <button type="submit">Submit</button>
-</form>
+  <script>
+    const form = document.getElementById('registrationForm');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec';
 
-<script>
-  const scriptURL = 'https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec';
-  const form = document.getElementById('registrationForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const object = {};
-    formData.forEach((value, key) => object[key] = value);
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
 
-    try {
-      const response = await fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(object),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      try {
+        await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
 
-      if (response.ok) {
-        form.reset();
+        // Сохраняем в localStorage для profile.html
+        localStorage.setItem("userProfile", JSON.stringify(data));
+
         setTimeout(() => {
           window.location.href = 'profile.html';
         }, 2000);
-      } else {
-        alert("Error submitting form.");
+      } catch (error) {
+        console.error('Ошибка при отправке:', error);
       }
-    } catch (error) {
-      alert("Error submitting form.");
-      console.error('Error!', error.message);
-    }
-  });
-</script>
-
+    });
+  </script>
 </body>
 </html>
