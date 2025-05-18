@@ -2,84 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Massage Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(#2c3e50, #34495e);
+      background: linear-gradient(#002b45, #1b5c79);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
-    .container {
+
+    form {
       background-color: #111;
-      padding: 30px;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
       width: 300px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     }
-    .container input,
-    .container textarea,
-    .container button {
+
+    input, textarea {
       width: 100%;
-      margin-bottom: 12px;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
       padding: 10px;
       border: none;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .container input,
-    .container textarea {
-      background: #f7f7f7;
-    }
-    .container button {
-      background-color: #2ecc71;
-      color: white;
-      font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <form id="registrationForm">
-      <input type="text" name="firstName" placeholder="First Name" required />
-      <input type="text" name="lastName" placeholder="Last Name" required />
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="email" name="email" placeholder="Email" required />
-      <input type="text" name="city" placeholder="City" required />
-      <input type="tel" name="phone" placeholder="Phone Number" required />
-      <input type="number" name="age" placeholder="Age (18+)" min="18" required />
-      <input type="number" name="weight" placeholder="Weight (kg)" required />
-      <input type="number" name="height" placeholder="Height (cm)" required />
-      <textarea name="description" placeholder="Profile Description" required></textarea>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+  <form id="registrationForm">
+    <input name="firstName" placeholder="First Name" required />
+    <input name="lastName" placeholder="Last Name" required />
+    <input name="username" placeholder="Username" required />
+    <input name="email" type="email" placeholder="Email" required />
+    <input name="city" placeholder="City" required />
+    <input name="phone" placeholder="Phone Number" required />
+    <input name="age" type="number" placeholder="Age (18+)" required min="18" />
+    <input name="weight" type="number" placeholder="Weight (kg)" required />
+    <input name="height" type="number" placeholder="Height (cm)" required />
+    <textarea name="description" placeholder="Profile Description" required></textarea>
+    <button type="submit">Submit</button>
+  </form>
 
   <script>
-    const form = document.getElementById("registrationForm");
     const scriptURL = "https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec";
+    const form = document.getElementById("registrationForm");
 
     form.addEventListener("submit", e => {
       e.preventDefault();
-
       const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
 
       fetch(scriptURL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
       })
-      .then(() => {
-        window.location.href = "profile.html";
+      .then(response => {
+        if (response.ok) {
+          setTimeout(() => {
+            window.location.href = "profile.html";
+          }, 2000);
+        } else {
+          alert("Submission failed. Please try again.");
+        }
       })
       .catch(error => {
         alert("Error submitting form.");
-        console.error("Error!", error.message);
+        console.error("Error:", error);
       });
     });
   </script>
