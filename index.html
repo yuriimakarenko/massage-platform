@@ -3,53 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registration</title>
+  <title>Massage Registration</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #0575E6, #021B79);
       font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #0077b6, #90e0ef);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     form {
       background: #111;
-      padding: 30px;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
       width: 100%;
-      max-width: 350px;
-      box-sizing: border-box;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
     input, textarea {
-      width: 100%;
+      margin-bottom: 10px;
       padding: 10px;
-      margin: 10px 0;
-      border: none;
+      font-size: 16px;
       border-radius: 5px;
-      box-sizing: border-box;
-      font-size: 14px;
+      border: none;
+    }
+
+    textarea {
+      resize: vertical;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #2ecc71;
-      border: none;
+      background-color: #28a745;
       color: white;
+      padding: 10px;
       font-size: 16px;
-      font-weight: bold;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
 
     button:hover {
-      background-color: #27ae60;
+      background-color: #218838;
     }
   </style>
 </head>
@@ -61,16 +61,14 @@
     <input type="email" name="email" placeholder="Email" required />
     <input type="text" name="city" placeholder="City" required />
     <input type="tel" name="phone" placeholder="Phone Number" required />
-    <input type="number" name="age" placeholder="Age (18+)" required min="18"/>
+    <input type="number" name="age" placeholder="Age (18+)" required />
     <input type="number" name="weight" placeholder="Weight (kg)" required />
     <input type="number" name="height" placeholder="Height (cm)" required />
-    <textarea name="description" placeholder="Profile Description" rows="3"></textarea>
+    <textarea name="description" placeholder="Profile Description"></textarea>
     <button type="submit">Submit</button>
   </form>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec';
-
     const form = document.getElementById('registrationForm');
 
     form.addEventListener('submit', async (e) => {
@@ -78,29 +76,24 @@
 
       const formData = new FormData(form);
       const data = {};
-
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
+      formData.forEach((value, key) => data[key] = value);
 
       try {
-        const response = await fetch(scriptURL, {
+        await fetch('https://script.google.com/macros/s/AKfycby78HZLXtPXAH0sHA9vF7HzyTKWbdEkQv9s5JD_17dtKsL-Ts_PP6xvwWnzphmmqoKGng/exec', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
 
-        if (response.ok) {
-          alert('Спасибо за регистрацию!');
-          setTimeout(() => {
-            window.location.href = 'profile.html';
-          }, 2000);
-        } else {
-          alert('Ошибка при отправке формы.');
-        }
+        // Перенаправляем через 2 секунды
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 2000);
+
       } catch (error) {
-        alert('Ошибка соединения.');
-        console.error('Error:', error);
+        console.error('Submission error:', error);
       }
     });
   </script>
