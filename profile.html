@@ -1,173 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Massage Profile</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile</title>
   <style>
     body {
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #023e8a, #90e0ef);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
+      color: #fff;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
 
-    .profile-container {
-      background: #111;
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    .container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 30px;
+      background-color: #111;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 255, 150, 0.3);
     }
 
     h1 {
       text-align: center;
       margin-bottom: 20px;
+      color: #00ffcc;
     }
 
-    .field {
-      margin-bottom: 15px;
+    p {
+      margin: 10px 0;
+      font-size: 16px;
     }
 
-    label {
+    .back-button {
       display: block;
-      margin-bottom: 5px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: none;
-      background: #eee;
-      color: #000;
-    }
-
-    .upload {
-      margin-top: 15px;
-    }
-
-    .avatar-preview {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background-color: #ccc;
-      background-size: cover;
-      background-position: center;
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 10px;
-      background: #28a745;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background-color: #00cc99;
       color: white;
-      border: none;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
     }
 
-    button:hover {
-      background: #218838;
+    .back-button:hover {
+      background-color: #009977;
     }
   </style>
 </head>
 <body>
-  <div class="profile-container">
-    <h1>Your Profile</h1>
+  <div class="container">
+    <h1>Welcome to Your Profile</h1>
+    <p><strong>First Name:</strong> (to be filled)</p>
+    <p><strong>Last Name:</strong> (to be filled)</p>
+    <p><strong>Username:</strong> (to be filled)</p>
+    <p><strong>Email:</strong> (to be filled)</p>
+    <p><strong>Phone:</strong> (to be filled)</p>
+    <p><strong>City:</strong> (to be filled)</p>
+    <p><strong>Age:</strong> (to be filled)</p>
+    <p><strong>Weight:</strong> (to be filled)</p>
+    <p><strong>Height:</strong> (to be filled)</p>
+    <p><strong>Description:</strong> (to be filled)</p>
 
-    <div class="avatar-preview" id="avatarPreview"></div>
-
-    <div class="field">
-      <label for="photo">Upload Photo</label>
-      <input type="file" id="photo" accept="image/*">
-    </div>
-
-    <div class="field">
-      <label>First Name</label>
-      <input type="text" id="firstName" readonly />
-    </div>
-
-    <div class="field">
-      <label>Last Name</label>
-      <input type="text" id="lastName" readonly />
-    </div>
-
-    <div class="field">
-      <label>Username</label>
-      <input type="text" id="username" readonly />
-    </div>
-
-    <div class="field">
-      <label>Email</label>
-      <input type="email" id="email" readonly />
-    </div>
-
-    <div class="field">
-      <label>City</label>
-      <input type="text" id="city" readonly />
-    </div>
-
-    <div class="field">
-      <label>Phone</label>
-      <input type="tel" id="phone" readonly />
-    </div>
-
-    <div class="field">
-      <label>Age</label>
-      <input type="number" id="age" readonly />
-    </div>
-
-    <div class="field">
-      <label>Weight</label>
-      <input type="number" id="weight" readonly />
-    </div>
-
-    <div class="field">
-      <label>Height</label>
-      <input type="number" id="height" readonly />
-    </div>
-
-    <div class="field">
-      <label>Profile Description</label>
-      <textarea id="description" rows="3" readonly></textarea>
-    </div>
+    <a class="back-button" href="index.html">← Back to Main</a>
   </div>
-
-  <script>
-    const data = localStorage.getItem('userProfile');
-    if (data) {
-      const profile = JSON.parse(data);
-      document.getElementById('firstName').value = profile.firstName || '';
-      document.getElementById('lastName').value = profile.lastName || '';
-      document.getElementById('username').value = profile.username || '';
-      document.getElementById('email').value = profile.email || '';
-      document.getElementById('city').value = profile.city || '';
-      document.getElementById('phone').value = profile.phone || '';
-      document.getElementById('age').value = profile.age || '';
-      document.getElementById('weight').value = profile.weight || '';
-      document.getElementById('height').value = profile.height || '';
-      document.getElementById('description').value = profile.description || '';
-    }
-
-    document.getElementById('photo').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          document.getElementById('avatarPreview').style.backgroundImage = `url(${evt.target.result})`;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  </script>
 </body>
 </html>
